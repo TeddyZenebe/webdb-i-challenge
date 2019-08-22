@@ -4,6 +4,12 @@ const db = require('./data/dbConfig.js');
 
 const router = express.Router();
 
+// const query = require('querystring').stringify({
+//     limit: 5,
+//     sortby: 'id',
+//     sortdir: 'desc'
+//   });
+
 router.get('/',(req, res)=>{
     db.select().table('accounts')
     .then(accounts=>{
@@ -49,7 +55,7 @@ router.put('/:id',(req, res)=>{
     if(!name||!budget){res.status(404).json({message:'both name and budget is required'})}else{
     db('accounts').where('id',id).update({name, budget})
     .then(accounts=>{
-        if(accounts==1){res.status(204).json({message:'updated correctly'})}else{
+        if(accounts==1){res.status(204).json(accounts)}else{
             res.status(404).json({message: 'the id provided is not found'})
         }   
     })
@@ -64,7 +70,7 @@ router.delete('/:id',(req, res)=>{
     const id = req.params.id
     db('accounts').where('id', id).del()
     .then(deleted=>{
-        if(deleted==1){res.status(201).json(deleted)}else{
+        if(deleted==1){res.status(201).json({deleted: deleted})}else{
            res.status(404).json({message: 'the id provided is not found'})
         }  
     })
